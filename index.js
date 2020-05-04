@@ -1,3 +1,4 @@
+//added a few properties
 import React, { Component } from "react";
 import {
   View,
@@ -70,6 +71,7 @@ const categoryKeys = Object.keys(Categories);
 
 const TabBar = ({ theme, activeCategory, onPress, width }) => {
   const tabSize = width / categoryKeys.length;
+  console.log(tabSize)
 
   return categoryKeys.map(c => {
     const category = Categories[c];
@@ -80,18 +82,19 @@ const TabBar = ({ theme, activeCategory, onPress, width }) => {
           onPress={() => onPress(category)}
           style={{
             flex: 1,
-            height: tabSize,
-            borderColor: category === activeCategory ? theme : "#EEEEEE",
+            height: 35,
+            width: tabSize,
+            borderColor: category === activeCategory ? theme : "lightgrey",
             borderBottomWidth: 2,
-            alignItems: "center",
-            justifyContent: "center"
+            // alignItems: "center",
+            // justifyContent: "center"
           }}
         >
           <Text
             style={{
               textAlign: "center",
               paddingBottom: 8,
-              fontSize: tabSize - 24
+              fontSize: 20,
             }}
           >
             {category.symbol}
@@ -127,7 +130,7 @@ export default class EmojiSelector extends Component {
     history: [],
     emojiList: null,
     colSize: 0,
-    width: 0
+    width: 200
   };
 
   //
@@ -273,26 +276,28 @@ export default class EmojiSelector extends Component {
   render() {
     const {
       theme,
+      searchBarBgColor,
       columns,
       placeholder,
       showHistory,
       showSearchBar,
       showSectionTitles,
       showTabs,
+      emojiBoardBackground,
       ...other
     } = this.props;
 
     const { category, colSize, isReady, searchQuery } = this.state;
 
     const Searchbar = (
-      <View style={styles.searchbar_container}>
+      <View style={{ ...styles.searchbar_container, backgroundColor: searchBarBgColor ?? 'white' }}>
         <TextInput
           style={styles.search}
           placeholder={placeholder}
           clearButtonMode="always"
           returnKeyType="done"
           autoCorrect={false}
-          underlineColorAndroid={theme}
+          // underlineColorAndroid={theme}
           value={searchQuery}
           onChangeText={this.handleSearch}
         />
@@ -302,7 +307,7 @@ export default class EmojiSelector extends Component {
     const title = searchQuery !== "" ? "Search Results" : category.name;
 
     return (
-      <View style={styles.frame} {...other} onLayout={this.handleLayout}>
+      <View style={{ ...styles.frame, ...this.props.emojiSelectorContainerOverride }} {...other} onLayout={this.handleLayout}>
         <View style={styles.tabBar}>
           {showTabs && (
             <TabBar
@@ -335,13 +340,13 @@ export default class EmojiSelector extends Component {
               </View>
             </View>
           ) : (
-            <View style={styles.loader} {...other}>
-              <ActivityIndicator
-                size={"large"}
-                color={Platform.OS === "android" ? theme : "#000000"}
-              />
-            </View>
-          )}
+              <View style={styles.loader} {...other}>
+                <ActivityIndicator
+                  size={"large"}
+                  color={Platform.OS === "android" ? theme : "#000000"}
+                />
+              </View>
+            )}
         </View>
       </View>
     );
@@ -354,15 +359,17 @@ EmojiSelector.defaultProps = {
   showTabs: true,
   showSearchBar: true,
   showHistory: false,
-  showSectionTitles: true,
+  showSectionTitles: false,
   columns: 6,
-  placeholder: "Search..."
+  placeholder: "Search...",
+  emojiSelectorContainerOverride: {backgroundColor: '#F7F7F7', borderRadius: 5}
 };
+
 
 const styles = StyleSheet.create({
   frame: {
     flex: 1,
-    width: "100%"
+    width: "100%",
   },
   loader: {
     flex: 1,
@@ -370,15 +377,17 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   tabBar: {
-    flexDirection: "row"
+    flexDirection: "row",
   },
   scrollview: {
-    flex: 1
+    flex: 1,
   },
   searchbar_container: {
+    borderTopWidth: .4,
+    borderBottomWidth: .4,
+    borderColor: 'black',
     width: "100%",
     zIndex: 1,
-    backgroundColor: "rgba(255,255,255,0.75)"
   },
   search: {
     ...Platform.select({
