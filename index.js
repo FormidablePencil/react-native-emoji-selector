@@ -69,9 +69,8 @@ const emojiByCategory = category =>
 const sortEmoji = list => list.sort((a, b) => a.sort_order - b.sort_order);
 const categoryKeys = Object.keys(Categories);
 
-const TabBar = ({ theme, activeCategory, onPress, width }) => {
+const TabBar = ({ theme, activeCategory, onPress, width, tabBottomBoarderColor }) => {
   const tabSize = width / categoryKeys.length;
-  console.log(tabSize)
 
   return categoryKeys.map(c => {
     const category = Categories[c];
@@ -84,7 +83,7 @@ const TabBar = ({ theme, activeCategory, onPress, width }) => {
             flex: 1,
             height: 35,
             width: tabSize,
-            borderColor: category === activeCategory ? theme : "lightgrey",
+            borderColor: category === activeCategory ? theme :  tabBottomBoarderColor,
             borderBottomWidth: 2,
             // alignItems: "center",
             // justifyContent: "center"
@@ -283,7 +282,7 @@ export default class EmojiSelector extends Component {
       showSearchBar,
       showSectionTitles,
       showTabs,
-      emojiBoardBackground,
+      tabBottomBoarderColor,
       ...other
     } = this.props;
 
@@ -311,6 +310,7 @@ export default class EmojiSelector extends Component {
         <View style={styles.tabBar}>
           {showTabs && (
             <TabBar
+            tabBottomBoarderColor={tabBottomBoarderColor}
               activeCategory={category}
               onPress={this.handleTabSelect}
               theme={theme}
@@ -362,7 +362,9 @@ EmojiSelector.defaultProps = {
   showSectionTitles: false,
   columns: 6,
   placeholder: "Search...",
-  emojiSelectorContainerOverride: {backgroundColor: '#F7F7F7', borderRadius: 5}
+  emojiSelectorContainerOverride: { backgroundColor: '#F7F7F7', borderRadius: 5 },
+  tabBottomBoarderColor: 'lightgrey'
+  // tabBoarderColor: 
 };
 
 
